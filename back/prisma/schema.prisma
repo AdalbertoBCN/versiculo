@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./db/dev.db"
+}
+
+model Book {
+  number    Int       @id
+  name      String
+  testament String    // Simulando enum com String
+  isGospel  Boolean   @default(false)
+  chapters  Chapter[]
+}
+
+model Chapter {
+  bookNumber  Int
+  number      Int
+
+  verses      Verse[]
+  book        Book     @relation(fields: [bookNumber], references: [number]) // Foreign key relation to Book
+
+  @@id([bookNumber, number])
+}
+
+model Verse {
+  bookNumber     Int
+  chapterNumber  Int
+  number         Int
+  text           String
+
+  chapter        Chapter @relation(fields: [bookNumber, chapterNumber], references: [bookNumber, number])
+
+  @@id([bookNumber, chapterNumber, number])
+}

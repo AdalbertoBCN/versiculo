@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 90% 85%;
+    --foreground: 40 100% 13%; 
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 40 70% 50%; /* Amber como cor primária */
+    --primary-foreground: 0 0% 10%; /* Contraste escuro */
+    --secondary: 40 90% 85%; /* Tom mais suave de amber */
+    --secondary-foreground: 40 100% 15%; /* Um tom mais escuro */
+    --muted: 40 90% 85%; /* Suavizado no amber */
+    --muted-foreground: 40 50% 30%; /* Foreground para muted */
+    --accent: 40 85% 75%; /* Amber para o accent */
+    --accent-foreground: 40 100% 20%; /* Foreground para o accent */
+    --destructive: 0 82.8% 45.6%; /* Vermelho para erro permanece */
+    --destructive-foreground: 0 0% 98%; /* Contraste claro */
+    --success: 90 85% 25%; /* Verde claro para sucesso */
+    --success-foreground: 0 0% 98%; /* Contraste branco */
+    --border: 40 95% 90%; /* Border com tom de amber suave */
+    --input: 40 95% 90%; /* Input com um tom de amber */
+    --ring: 40 100% 50%; /* Ring com amber vibrante */
+    --chart-1: 32 100% 67%; /* Tons mais vibrantes para gráficos */
+    --chart-2: 45 90% 50%;
+    --chart-3: 55 90% 40%;
+    --chart-4: 65 90% 60%;
+    --chart-5: 75 85% 70%;
+    --radius: 0.5rem;
+  }
+  
+  .dark {
+    --background: 40 30% 10%; /* Fundo escuro com tom de amber */
+    --foreground: 40 35% 60%; /* Foreground claro */
+    --card: 40 30% 20%; /* Cartões escuros com amber */
+    --card-foreground: 0 0% 98%;
+    --popover: 40 30% 20%; /* Popover escuro */
+    --popover-foreground: 0 0% 98%;
+    --primary: 40 100% 30%; /* Amber vibrante no dark mode */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 40 30% 40%; /* Amber suavizado no dark mode */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 40 30% 40%; /* Muted com amber */
+    --muted-foreground: 40 50% 70%; /* Foreground para muted */
+    --accent: 40 30% 40%; /* Accent em amber */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 120 45% 45%; /* Verde para sucesso permanece */
+    --success-foreground: 0 0% 98%;
+    --border: 40 30% 40%;
+    --input: 40 30% 40%;
+    --ring: 40 60% 30%; /* Ring mais escuro com amber */
+    --chart-1: 32 70% 50%; /* Ajustes dos gráficos para dark mode */
+    --chart-2: 45 60% 40%;
+    --chart-3: 55 60% 35%;
+    --chart-4: 65 60% 50%;
+    --chart-5: 75 60% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
