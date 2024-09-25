@@ -22,5 +22,8 @@ export interface CensorChapter {
 }
 
 export interface WordsGuess {
-  [key: string]: number;
+  words: {
+    word: string;
+    count: number;
+  }[]
 }

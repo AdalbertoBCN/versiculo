@@ -1,126 +1,83 @@
 "use client";
-
-import { deleteCookies } from "@/app/(actions)/delete-cookies";
-import { fetchRandomChapter } from "@/app/(actions)/get-random-chapter";
-import { getWordsGuess } from "@/app/(actions)/get-words-guess";
-import { submitWordGospel as actionSubmitWord } from "@/app/(actions)/submit-word-gospel";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import ListWordsGuess from "@/components/list-words-guess";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import WordDisplay from "@/components/word";
-import { transparentSquare } from "@/lib/utils";
-import { CensorChapter, WordsGuess } from "@/types";
-import { Send } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useFormState } from "react-dom";
+import ChapterContent from "@/components/chapter-content";
+import ListGuesses from "@/components/list-guesses";
+import Spinner from "@/components/spinner";
+import SubmitInput from "@/components/submit-input";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useGameLogic } from "@/hooks/useGameLogic";
+import { BookOpen, RotateCcw } from "lucide-react";
+import Link from "next/link";
 
 export default function Evangelhos() {
-  const [randomChapter, setRandomChapter] = useState<
-    (CensorChapter & { win?: boolean }) | null
-  >(null);
-  const [wordsGuess, setWordsGuess] = useState<WordsGuess | null>(null);
-  const [inputWord, setInputWord] = useState<string>("");
-  const [selectedGuess, setSelectedGuess] = useState<string | null>(null);
-  const [wordsState, submitWord] = useFormState(actionSubmitWord, null);
-
-  const fetchChapterData = async () => {
-    const [chapter, guessedWords] = await Promise.all([
-      fetchRandomChapter(true),
-      getWordsGuess(true),
-    ]);
-    setRandomChapter(chapter);
-    setWordsGuess(guessedWords);
-  };
-
-  useEffect(() => {
-    fetchChapterData();
-  }, []);
-
-  const handleFormSubmit = async (formData: FormData) => {
-    await submitWord(formData);
-    fetchChapterData();
-    setInputWord("");
-    setSelectedGuess(formData.get("word")?.toString() ?? "");
-  };
-
-  const handleReestart = async () => {
-    setRandomChapter(null);
-    setWordsGuess(null);
-    // await new Promise((resolve) => setTimeout(resolve, 5000));
-    await deleteCookies(true);
-    await fetchChapterData();
-    setSelectedGuess(null);
-  };
+  const {
+    randomChapter,
+    selectedGuess,
+    handleFormSubmit,
+    setInputWord,
+    inputWord,
+    wordsGuess,
+    wordsState,
+    setSelectedGuess,
+    handleReestart
+  } = useGameLogic({ isGospel: true });
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <div className="flex-grow flex flex-col overflow-hidden">
-        {" "}
-        {/* Container principal */}
-        <Header randomChapter={randomChapter} handleReestart={handleReestart} />
-        <main className="flex-1 overflow-y-auto px-4 pb-5 pt-2">
-          {randomChapter?.win && (
-            <div className="w-[95%] mb-4 rounded-sm mx-auto flex flex-col items-center justify-center bg-success/80 text-background font-semibold h-28">
-              <h3>Você ganhou!</h3>
-            </div>
-          )}{" "}
-          {/* Main com scroll e largura máxima */}
-          {randomChapter && (
-            <div>
-              <div className="mb-4 text-lg">
-                {randomChapter.bookName.map((word, index) => (
-                  <WordDisplay
-                    selectedGuess={selectedGuess}
-                    word={word}
-                    index={index}
-                    key={word.concat(index.toString())}
-                  />
-                ))}
-                {transparentSquare}
-                <WordDisplay
-                  word={randomChapter.chapterNumber}
-                  selectedGuess={selectedGuess}
-                  index={0}
-                />
-              </div>
-              <div>
-                {randomChapter.verses.map((verse, upIndex) => (
-                  <p
-                    key={String(verse.concat(upIndex.toString()))}
-                    data-verse={`${String(upIndex).padStart(2, "0")}.`}
-                    className="flex flex-wrap items-start text-md tracking-tight leading-snug before:content-[attr(data-verse)] before:font-normal before:tracking-tight before:font-mono before:text-sm ml-8 before:-translate-x-8 before:absolute relative"
-                  >
-                    {verse.map((word, index) => (
-                      <WordDisplay
-                        word={word}
-                        index={index}
-                        key={word.concat(index.toString())}
-                        selectedGuess={selectedGuess}
-                      />
-                    ))}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
-        </main>
-        <Footer handleFormSubmit={handleFormSubmit} 
-          inputWord={inputWord}
-          setInputWord={setInputWord}
-          win={randomChapter?.win}
-        />
-      </div>
+    <div className="flex flex-col h-screen relative">
+      <header className="h-16 flex items-center justify-between px-4 bg-foreground/10 dark:bg-foreground/5">
+        <Link href="/">
+          <h1 className="text-lg">
+            Versículo
+            <BookOpen className="size-6 inline-block ml-2" />
+          </h1>
+        </Link>
 
-      <aside className="w-full max-w-52 ml-auto bg-foreground/10">
-        <ListWordsGuess
-          wordsGuess={wordsGuess}
-          setSelectedGuess={setSelectedGuess}
-          selectedGuess={selectedGuess}
-          wordsState={wordsState}
-        />
-      </aside>
+        <h2 className="text-md font-semibold">
+          Evangelhos
+          <RotateCcw className="size-5 inline-block ml-2 cursor-pointer" onClick={handleReestart} />
+        </h2>
+
+        <ThemeToggle />
+      </header>
+
+      <main className="flex flex-1 overflow-hidden">
+        <div className="flex flex-col flex-1 overflow-hidden">
+          <div className="flex flex-col">
+            <ScrollArea className="px-4 h-[calc(100vh-8rem)]">
+              {randomChapter ? (
+                <ChapterContent
+                  randomChapter={randomChapter}
+                  selectedGuess={selectedGuess}
+                />
+              ) : (
+                <Spinner />
+              )}
+            </ScrollArea>
+          </div>
+
+          <footer className="static bottom-0 left-0 flex items-center justify-center bg-foreground/10 dark:bg-foreground/5 px-4 py-3">
+            {randomChapter ? (
+              <SubmitInput
+                inputWord={inputWord}
+                handleFormSubmit={handleFormSubmit}
+                setInputWord={setInputWord}
+                win={randomChapter.win}
+              />
+            ) : (
+              <Spinner />
+            )}
+          </footer>
+        </div>
+
+        <aside className="w-48 bg-foreground/10 dark:bg-foreground/5">
+          <ListGuesses
+            wordsGuess={wordsGuess}
+            setSelectedGuess={setSelectedGuess}
+            wordsState={wordsState}
+            selectedGuess={selectedGuess}
+          />
+        </aside>
+      </main>
     </div>
   );
 }

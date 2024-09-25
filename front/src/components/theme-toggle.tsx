@@ -19,7 +19,8 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleDarkMode}
-      className={cn("rounded-full")}
+
+      className={cn("rounded-full hover:bg-primary/20")}
     >
       {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
       <span className="sr-only">

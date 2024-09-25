@@ -1,9 +1,10 @@
 "use server"
+
 import { getchapterCookieName, getwordsGuessCookieName } from "@/lib/utils";
-import { cookies as useCookies } from "next/headers"
+import { cookies as storedCookies } from "next/headers"
 
 export async function deleteCookies(isGospel: boolean) {
-    const cookies = useCookies();
+    const cookies = storedCookies();
 
     const chapterCookieName = getchapterCookieName(isGospel);
     const wordsGuessCookieName = getwordsGuessCookieName(isGospel);

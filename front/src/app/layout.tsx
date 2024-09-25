@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider";
 
 const notoSerif = localFont({
   src: "./fonts/NotoSerif.woff",
-  variable: "--font-serif",
-  weight: "100 900",
+  variable: "--font-geist-sans",
 });
 
 export const metadata: Metadata = {
@@ -20,10 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br">
-      <body
-        className={`${notoSerif.className} font-medium antialiased`}
-      >
+    <html lang="en">
+      <body className={`${notoSerif.className} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
